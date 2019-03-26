@@ -1,0 +1,41 @@
+{
+	"name": "flutter-stateful-widget-generator",
+	"displayName": "Flutter Stateful Widget Generator",
+	"description": "Generates a stateful widget into a new file.",
+	"version": "0.0.1", 
+    "publisher": "yum650350",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yum650350/flutter-stateful-widget-generator.git"
+    },
+	"engines": {
+		"vscode": "^1.32.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.create"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [{
+			"command": "extension.create",
+			"title": "Flutter Stateful Widget Generator : Create Stateful Widget"
+		}]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"tslint": "^5.12.1",
+		"@types/node": "^10.12.21",
+		"@types/mocha": "^2.2.42"
+	}
+}
