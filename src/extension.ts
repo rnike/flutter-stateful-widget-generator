@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as fs from 'fs'; 
+import * as fs from 'fs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -34,60 +34,76 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.window.showOpenDialog(dialogoptions).then((y) => {
 					if (y !== undefined && String(y) !== '') {
 						var folderPath = y[0];
-						var widgetName = String(x);
+						var widgetName = '';
 						var i: number;
-						var fileName = '';
+						var fileName = ''; 
+
 						for (i = 0; i < x.length; i++) {
 							var t = x[i];
+							var t2 = x[i];
 							if (i === 0) {
-								t = x[i].toLocaleLowerCase();
+								t = x[i].toLowerCase();
+								t2 = x[i].toUpperCase();
 							}
 							fileName += t;
+							widgetName += t2;
 						}
 						fileName += '.dart';
-						var fullPath = path.join(folderPath.toString(), fileName);
-						var theu = vscode.Uri.parse(fullPath);
-						fs.exists(theu.fsPath, (exists) => {
-							if (exists) { 
-								vscode.window.showErrorMessage(`Widget Generator: File Exists -> ${fileName} `);
-							} else { 
-								var content =
-									`
-import 'package:flutter/material.dart';
+						var progresOptions: vscode.ProgressOptions = {
+							location: vscode.ProgressLocation.Notification,
+							cancellable: false,
+							title: `Creating ${fileName} `
+						};
+						  vscode.window.withProgress(progresOptions,
+							async (d) => {
+								var fullPath = path.join(folderPath.toString(), fileName);
+								var theu = vscode.Uri.parse(fullPath);
+								fs.exists(theu.fsPath, (exists) => {
+									if (exists) {
+										vscode.window.showErrorMessage(`Widget Generator: File Exists -> ${fileName} `);
+									} else {
+										var content =
+											`import 'package:flutter/material.dart';
 
 class ${widgetName} extends StatefulWidget {
-  @override
-  ${widgetName}View createState() {
-    return ${widgetName}View();
-  }
+	@override
+	${widgetName}View createState() {
+		return ${widgetName}View();
+	}
 }
 
 class ${widgetName}View extends ${widgetName}State {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Text('${widgetName}');
-  }
+	@override
+	Widget build(BuildContext context) {
+		// TODO: implement build
+		return Text('${widgetName}');
+	}
 }
 
 abstract class ${widgetName}State extends State<${widgetName}> {
-  // TODO: implement state
+	// TODO: implement state
 }
-`;
+`; 
+										fs.writeFile(theu.fsPath, content, function (err) {
+											if (err) {
+												vscode.window.showErrorMessage(`Widget Generator: err -> ${err.code} `);
+												console.log(err);
+											}
+											else {
+												vscode.workspace.openTextDocument(theu.fsPath).then(doc => {
+													vscode.window.showTextDocument(doc);
+												});
+											}
+										});
+									}
+								});
 
-								fs.writeFile(theu.fsPath, content, function (err) {
-									if (err) {
-										console.log(err);
-									}
-									else {
-										console.log('Write operation complete.');
-										vscode.workspace.openTextDocument(theu.fsPath).then(doc => {
-											vscode.window.showTextDocument(doc);
-										 });
-									}
-								}); 
-							} 
+							}
+
+						).then(() => {
+							console.log('Task complete.');
 						});
+
 					}
 				});
 			}
