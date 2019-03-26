@@ -2,7 +2,7 @@
 	"name": "flutter-stateful-widget-generator",
 	"displayName": "Flutter Stateful Widget Generator",
 	"description": "Generates a stateful widget into a new file.",
-	"version": "0.0.1", 
+	"version": "0.0.2", 
     "publisher": "yum650350",
     "repository": {
         "type": "git",
